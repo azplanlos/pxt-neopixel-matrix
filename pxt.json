@@ -1,0 +1,30 @@
+{
+    "name": "pxt-kitronik-zip-tile",
+    "version": "0.0.1",
+    "description": "Blocks for driving the Kitronik ZIP Tile",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*",
+        "ws2812b": "github:Microsoft/pxt-ws2812b#v0.0.4"
+    },
+    "files": [
+        "README.md",
+        "zip_tile.ts",
+        "shims.d.ts",
+        "enums.d.ts",
+        "zip_tile.cpp"
+    ],
+    "testFiles": [
+        "tests.ts"
+    ],
+    "yotta": {
+        "config": {
+            "microbit-dal": {
+                "bluetooth": {
+                    "enabled": 0
+                }
+            }
+        }
+    },
+    "public": true
+}

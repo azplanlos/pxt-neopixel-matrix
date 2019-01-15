@@ -1,0 +1,18 @@
+{
+    "target": "microbit",
+    "targetVersion": "1.1.84",
+    "name": "pxt-kitronik-zip-tile",
+    "meta": {},
+    "editor": "tsprj",
+    "pubId": "",
+    "pubCurrent": false,
+    "_rev": null,
+    "id": "22db64a9-ff89-4147-0020-1231b17fa525",
+    "recentUse": 1547566399,
+    "modificationTime": 1547566399,
+    "blobId": null,
+    "blobVersion": null,
+    "blobCurrent": false,
+    "isDeleted": false,
+    "path": "pxt-kitronik-zip-tile"
+}
