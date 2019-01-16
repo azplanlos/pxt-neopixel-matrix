@@ -96,7 +96,7 @@ namespace Kitronik_Zip_Tile {
          * @param endHue the end hue value for the rainbow, eg: 360
          */
         //% blockId="kitronik_set_zip_tile_rainbow" block="%tile|show rainbow from %startHue|to %endHue" 
-        //% weight=60 blockGap=8
+        //% weight=95 blockGap=8
         showRainbow(startHue: number = 1, endHue: number = 360) {
             if (this._length <= 0) return;
 
@@ -160,7 +160,7 @@ namespace Kitronik_Zip_Tile {
          * @param offset number of ZIP LEDs to rotate forward, eg: 1
          */
         //% blockId="kitronik_zip_tile_display_rotate" block="%tile|rotate ZIP LEDs by %offset" blockGap=8
-        //% weight=50
+        //% weight=94
         rotate(offset: number = 1): void {
             const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
             this.buf.rotate(-offset * stride, this.start * stride, this._length * stride)
@@ -171,7 +171,7 @@ namespace Kitronik_Zip_Tile {
          * @param rgb RGB color of the LED
          */
         //% blockId="kitronik_zip_tile_display_set_strip_color" block="%tile|show color %rgb=zip_colors" 
-        //% weight=98 blockGap=8
+        //% weight=99 blockGap=8
         showColor(rgb: number) {
         	rgb = rgb >> 0;
             this.setAllRGB(rgb);
@@ -186,7 +186,7 @@ namespace Kitronik_Zip_Tile {
          * @param rgb RGB color of the LED
          */
         //% blockId="kitronik_zip_tile_display_set_matrix_color" block="%tile|set matrix color at x %x|y %y|to %rgb=zip_colors" 
-        //% weight=99
+        //% weight=98
         setMatrixColor(x: number, y: number, rgb: number) {
             let LEDS_ON_PANEL = 64
             let COLUMNS = this._matrixWidth
@@ -202,10 +202,7 @@ namespace Kitronik_Zip_Tile {
             let xDiv = x / 8
             let floorY = Math.floor(yDiv)
             let floorX = Math.floor(xDiv)
-            //let floorY = parseInt(("" + yDiv + "").charAt(0))
-            //let floorX = parseInt(("" + xDiv + "").charAt(0))
-            //let floorY = Math.idiv(yDiv)
-            //let floorX = Math.idiv(xDiv)
+            //If statement checks the tile arrangement: 1 row of tiles (inc. single tile), 2 tiles connected top to top, or a 2 x 2 arrangement
             if (ROWS == 8) {
                 i = (x + 8 * y) + (floorX * (LEDS_ON_PANEL - 8))
             }
@@ -236,16 +233,15 @@ namespace Kitronik_Zip_Tile {
 
         /**
          * Scroll text across tile (select direction, speed & colour)
-         * Set LED to a given color (range 0-255 for r, g, b) in the 8 x 8 matrix 
          * @param text is the text to scroll
          * @param direction the text will travel
-         * @param delay the pause time between each display refresh
+         * @param delay the pause time between each display refresh, eg: 25
          * @param style extra formatting of the text (such as underlined)
          * @param rgb RGB color of the text
          * @param formatRGB RGB color of the text
          */
-        //% blockId="kitronik_zip_tile_scroll_text" block="%tile|scroll %text|%direction|delay (ms) %delay|formatting %style|format colour %formatRGB=zip_colors|text colour %rgb=zip_colors" 
-        //% weight=98
+        //% blockId="kitronik_zip_tile_scroll_text" block="%tile|scroll %text|%direction|delay (ms) %delay|text colour %rgb=zip_colors|formatting %style|format colour %formatRGB=zip_colors" 
+        //% weight=97
         scrollText(text: string, direction: TextDirection, delay: number, style: TextStyle, formatRGB: number, rgb: number) {
             let LEDS_ON_PANEL = 64
             let COLUMNS = this._matrixWidth
@@ -264,18 +260,17 @@ namespace Kitronik_Zip_Tile {
                     for (textChar = 0; textChar < text.length; textChar++) {
                         textHeight += 6
                     }
-                    //Setup for static text display
-                    if (textHeight <= ROWS) {
-                        //Make text static display for set length of time
-                        break
-                    }
+                    //Setup for static text display TO DO
+                    //if (textHeight <= ROWS) {
+                    //    //Make text static display for set length of time
+                    //    break
+                    //}
                     for (let row = 0; row < textHeight + ROWS; row ++) {
                         this.clear()
                         if (style == TextStyle.Background) {
                             this.brightness = backBrightness
                             this.showColor(formatRGB)
                         }
-                        //this.show()
                         let offsetRow = 0
                         for (let stringLength = 0; stringLength < text.length; stringLength++) {
                             this.brightness = textBrightness
@@ -314,14 +309,12 @@ namespace Kitronik_Zip_Tile {
 	                                        if (yValue < ROWS && yValue >= 0) {
 	                                            let i = (((2 * floorY) - 1) * ((2 + c_col) + 8 * yValue)) + (currentPanel * LEDS_ON_PANEL) - 1 - (floorY * ((totalPanels * LEDS_ON_PANEL) - 1))
 	                                            this.setPixelColor(i, rgb)
-	                                            //this.show()
 	                                        }
 							            }
 	                                    else {
 	                                    	if (yValue < ROWS && yValue >= 0) {
 	                                            let i = (2 + c_col) + 8 * yValue
 	                                            this.setPixelColor(i, rgb)
-	                                            //this.show()
 	                                        }
 	                                    } 
                                     }
@@ -340,32 +333,32 @@ namespace Kitronik_Zip_Tile {
                     for (textChar = 0; textChar < text.length; textChar++) {
                         textLength += charWidth(text.charAt(textChar)) + 1
                     }
-                    //Setup for static text display
-                    if (textLength <= COLUMNS) {
-                        //Make text static display for set length of time
-                        for (let column = 0; column < COLUMNS; column++) {
-                            for (let stringLength = 0; stringLength < text.length; stringLength++) {
-                                this.brightness = textBrightness
-                                let width = charWidth(text.charAt(stringLength))
-                                let textData: Buffer = getChar(text.charAt(stringLength))
-                                for (let c_row = 0; c_row < 5; c_row++) {
-                                    for (let c_col = 0; c_col < 5; c_col++) {
-                                        if ((textData[c_row] & (1 << (4 - c_col))) > 0) {
-                                            let xValue = COLUMNS + c_col
-                                            let xDiv = xValue / 8
-                                            let floorX = Math.floor(xDiv)
-                                            if (xValue < COLUMNS && xValue >= 0) {
-                                                let i = (xValue + ((2 + c_row) * 8)) + (floorX * (LEDS_ON_PANEL - 8))
-                                                this.setPixelColor(i, rgb)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        this.show()
-                        break
-                    }
+                    //Setup for static text display TO DO
+                    //if (textLength <= COLUMNS) {
+                    //    //Make text static display for set length of time
+                    //    for (let column = 0; column < COLUMNS; column++) {
+                    //        for (let stringLength = 0; stringLength < text.length; stringLength++) {
+                    //            this.brightness = textBrightness
+                    //            let width = charWidth(text.charAt(stringLength))
+                    //            let textData: Buffer = getChar(text.charAt(stringLength))
+                    //            for (let c_row = 0; c_row < 5; c_row++) {
+                    //                for (let c_col = 0; c_col < 5; c_col++) {
+                    //                    if ((textData[c_row] & (1 << (4 - c_col))) > 0) {
+                    //                        let xValue = COLUMNS + c_col
+                    //                        let xDiv = xValue / 8
+                    //                        let floorX = Math.floor(xDiv)
+                    //                        if (xValue < COLUMNS && xValue >= 0) {
+                    //                            let i = (xValue + ((2 + c_row) * 8)) + (floorX * (LEDS_ON_PANEL - 8))
+                    //                            this.setPixelColor(i, rgb)
+                    //                        }
+                    //                    }
+                    //                }
+                    //            }
+                    //        }
+                    //    }
+                    //    this.show()
+                    //    break
+                    //}
                     for (let column = 0; column < textLength + COLUMNS; column++) {
                         this.clear()
                         if (style == TextStyle.Background) {
@@ -397,7 +390,6 @@ namespace Kitronik_Zip_Tile {
                                 }
                             }
                         }
-                        //this.show()
                         let offsetColumn = 0
                         for (let stringLength = 0; stringLength < text.length; stringLength++) {
                             this.brightness = textBrightness
@@ -452,7 +444,7 @@ namespace Kitronik_Zip_Tile {
          * Send all the changes to the ZIP Tile display.
          */
         //% blockId="kitronik_zip_tile_display_show" block="%tile|show" blockGap=8
-        //% weight=97
+        //% weight=96
         show() {
             ws2812b.sendBuffer(this.buf, this.pin);
         }
@@ -462,7 +454,7 @@ namespace Kitronik_Zip_Tile {
          * You need to call ``show`` to make the changes visible.
          */
         //% blockId="kitronik_zip_tile_display_clear" block="%tile|clear"
-        //% weight=96
+        //% weight=95
         
         clear(): void {
             const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
@@ -474,7 +466,7 @@ namespace Kitronik_Zip_Tile {
          * @param brightness a measure of LED brightness in 0-255. eg: 255
          */
         //% blockId="kitronik_zip_tile_display_set_brightness" block="%tile|set brightness %brightness" blockGap=8
-        //% weight=95
+        //% weight=94
         
         setBrightness(brightness: number): void {
             this.brightness = brightness & 0xff;

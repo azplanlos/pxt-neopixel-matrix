@@ -1,6 +1,6 @@
-# pxt-kitronik-zip-64
+# pxt-kitronik-zip-tile
 
-Custom blocks for www.kitronik.co.uk/5626 :GAME ZIP64 for micro:bit. 
+Custom blocks for www.kitronik.co.uk/5645 ZIP Tile for BBC micro:bit. 
 See website for example code.
 
 ## To Use
@@ -34,8 +34,6 @@ GAME_ZIP64.runMotor(100)
 
 ## Supported targets
 
-* for PXT/microbit
-(The metadata above is needed for package search.)
 
 ## License
 
