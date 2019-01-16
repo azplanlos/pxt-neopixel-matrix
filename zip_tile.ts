@@ -96,7 +96,7 @@ namespace Kitronik_Zip_Tile {
          * @param endHue the end hue value for the rainbow, eg: 360
          */
         //% blockId="kitronik_set_zip_tile_rainbow" block="%tile|show rainbow from %startHue|to %endHue" 
-        //% weight=95 blockGap=8
+        //% weight=94 blockGap=8
         showRainbow(startHue: number = 1, endHue: number = 360) {
             if (this._length <= 0) return;
 
@@ -160,7 +160,7 @@ namespace Kitronik_Zip_Tile {
          * @param offset number of ZIP LEDs to rotate forward, eg: 1
          */
         //% blockId="kitronik_zip_tile_display_rotate" block="%tile|rotate ZIP LEDs by %offset" blockGap=8
-        //% weight=94
+        //% weight=93
         rotate(offset: number = 1): void {
             const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
             this.buf.rotate(-offset * stride, this.start * stride, this._length * stride)
@@ -240,7 +240,7 @@ namespace Kitronik_Zip_Tile {
          * @param rgb RGB color of the text
          * @param formatRGB RGB color of the text
          */
-        //% blockId="kitronik_zip_tile_scroll_text" block="%tile|scroll %text|%direction|delay (ms) %delay|text colour %rgb=zip_colors|formatting %style|format colour %formatRGB=zip_colors" 
+        //% blockId="kitronik_zip_tile_scroll_text" block="%tile|scroll %text|%direction|delay (ms) %delay|formatting %style|format colour %formatRGB=zip_colors|text colour %rgb=zip_colors" 
         //% weight=97
         scrollText(text: string, direction: TextDirection, delay: number, style: TextStyle, formatRGB: number, rgb: number) {
             let LEDS_ON_PANEL = 64
@@ -466,7 +466,7 @@ namespace Kitronik_Zip_Tile {
          * @param brightness a measure of LED brightness in 0-255. eg: 255
          */
         //% blockId="kitronik_zip_tile_display_set_brightness" block="%tile|set brightness %brightness" blockGap=8
-        //% weight=94
+        //% weight=92
         
         setBrightness(brightness: number): void {
             this.brightness = brightness & 0xff;
@@ -571,8 +571,8 @@ namespace Kitronik_Zip_Tile {
 
     /**
      * Create a new ZIP LED driver for ZIP Tile Display.
-     * @param columns the total number of ZIP LED columns across all connected tiles
-     * @param rows the total number of ZIP LED rows across all connected tiles
+     * @param columns the total number of ZIP LED columns across all connected tiles, eg: 8
+     * @param rows the total number of ZIP LED rows across all connected tiles, eg: 8
      * @param uBitConfig postion of the microbit in a multipanel display (for a single tile, leave as 'Standard')
      */
     //% blockId="kitronik_zip_tile_display_create" block="ZIP Tile display with %columns|columns and %rows|rows with uBit location %uBitConfig|"
