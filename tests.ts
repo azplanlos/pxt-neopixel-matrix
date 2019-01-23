@@ -5,18 +5,18 @@
 //Pressing button A clears the Tile and sets the ZIP LED at coordinates (4, 5) to be purple and then makes the changes visible
 //Pressing button B will scroll the message 'Hello world' left across the Tile with a delay of 20ms, with white text on a green background
 
-let tile: Kitronik_Zip_Tile.ZIPTileDisplay = null
-tile = Kitronik_Zip_Tile.createZIPTileDisplay(8, 8, Kitronik_Zip_Tile.UBitLocations.Standard)
-tile.setBrightness(128)
-tile.showColor(Kitronik_Zip_Tile.colors(ZipLedColors.Green))
+let display: Kitronik_Zip_Tile.ZIPTileDisplay = null
+display = Kitronik_Zip_Tile.createZIPTileDisplay(1, 1, Kitronik_Zip_Tile.UBitLocations.Hidden)
+display.setBrightness(128)
+display.showColor(Kitronik_Zip_Tile.colors(ZipLedColors.Green))
 input.onButtonPressed(Button.A, function () {
-	tile.clear()
-    tile.show()
-    tile.setMatrixColor(4, 5, Kitronik_Zip_Tile.colors(ZipLedColors.Purple))
-    tile.show()
+	display.clear()
+    display.show()
+    display.setMatrixColor(4, 5, Kitronik_Zip_Tile.colors(ZipLedColors.Purple))
+    display.show()
 })
 input.onButtonPressed(Button.B, function () {
-    tile.scrollText(
+    display.scrollText(
     "Hello world",
     Kitronik_Zip_Tile.TextDirection.Left,
     20,
