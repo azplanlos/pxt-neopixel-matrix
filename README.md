@@ -112,8 +112,10 @@ Clear the ZIP Tile display:
 tile.clear()
 ```
 
-## Supported targets
+## Supported Targets
 
+* for PXT/microbit
+(The metadata above is needed for package search.)
 
 ## License
 

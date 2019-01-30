@@ -198,9 +198,16 @@ namespace Kitronik_Zip_Tile {
             let floorX = Math.floor(xDiv)
             //If statement checks the tile arrangement: 1 row of tiles (inc. single tile), 2 tiles connected top to top, or a 2 x 2 arrangement
             if (ROWS == 8) {
-                i = (x + 8 * y) + (floorX * (LEDS_ON_PANEL - 8))
+            	switch (this._uBitLocation) {
+            		case UBitLocations.Hidden:
+            			//The first part of the equation is the equivalent of (x+8y) on the normal matrix starting 0, 0 in top left
+                		i = (x + 8 * y) + (floorX * (LEDS_ON_PANEL - 8))
+                		break
+            		case UBitLocations.Visible:
+            			i = (((COLUMNS/8)*LEDS_ON_PANEL)-1) - (x + 8 * y) - (floorX * (LEDS_ON_PANEL - 8))
+            			break
+            	}
             }
-            //CHECK THIS STUFF WORKS WITH NEW LOCATION TYPES
             else if (COLUMNS == 8) {
                 if (this._uBitLocation == UBitLocations.Visible) {
                     if (y < 8) {
@@ -221,7 +228,15 @@ namespace Kitronik_Zip_Tile {
                 i = ((2 * floorY) - 1) * (x + 8 * y) + (currentPanel * LEDS_ON_PANEL) - 1 - (floorY * ((totalPanels * LEDS_ON_PANEL) - 1))
             }
             else if (COLUMNS == 16 && ROWS == 16) {
-                i = (-255 * (floorY - 1)) + (2 * floorY - 1) * (x + 8 * (y - floorY * 8)) + (floorY * floorX * (LEDS_ON_PANEL - 8)) + (floorY - 1) * (floorX * (LEDS_ON_PANEL - 8))
+	            switch (this._uBitLocation) {
+	        		case UBitLocations.Hidden:
+	        			//The first part of the equation is the equivalent of (x+8y) on the normal matrix starting 0, 0 in top left
+	            		i = (-255 * (floorY - 1)) + (2 * floorY - 1) * (x + 8 * (y - floorY * 8)) + (floorY * floorX * (LEDS_ON_PANEL - 8)) + (floorY - 1) * (floorX * (LEDS_ON_PANEL - 8))
+	            		break
+	        		case UBitLocations.Visible:
+	        			i = i = (-255 * (floorY - 1)) + (2 * floorY - 1) * (x + 8 * (y - floorY * 8)) + (floorY * floorX * (LEDS_ON_PANEL - 8)) + (floorY - 1) * (floorX * (LEDS_ON_PANEL - 8)) - 128 + (floorY * 256)
+	        			break
+	        	}
             }
             this.setPixelColor(i, rgb)
         }
@@ -265,11 +280,13 @@ namespace Kitronik_Zip_Tile {
                     for (textChar = 0; textChar < text.length; textChar++) {
                         textHeight += 6
                     }
-                    //Setup for static text display TO DO
-                    //if (textHeight <= ROWS) {
-                    //    //Make text static display for set length of time
-                    //    break
-                    //}
+                    /////////////////////////////////////////////////////////
+                    //Setup for static text display TO DO 				   //
+                    //if (textHeight <= ROWS) {							   //
+                    //    //Make text static display for set length of time//
+                    //    break											   //
+                    //}													   //
+                    /////////////////////////////////////////////////////////
                     for (let row = 0; row < textHeight + ROWS; row ++) {
                         this.clear()
                         if (style == TextStyle.Background) {
@@ -363,32 +380,34 @@ namespace Kitronik_Zip_Tile {
                     for (textChar = 0; textChar < text.length; textChar++) {
                         textLength += charWidth(text.charAt(textChar)) + 1
                     }
-                    //Setup for static text display TO DO
-                    //if (textLength <= COLUMNS) {
-                    //    //Make text static display for set length of time
-                    //    for (let column = 0; column < COLUMNS; column++) {
-                    //        for (let stringLength = 0; stringLength < text.length; stringLength++) {
-                    //            this.brightness = textBrightness
-                    //            let width = charWidth(text.charAt(stringLength))
-                    //            let textData: Buffer = getChar(text.charAt(stringLength))
-                    //            for (let c_row = 0; c_row < 5; c_row++) {
-                    //                for (let c_col = 0; c_col < 5; c_col++) {
-                    //                    if ((textData[c_row] & (1 << (4 - c_col))) > 0) {
-                    //                        let xValue = COLUMNS + c_col
-                    //                        let xDiv = xValue / 8
-                    //                        let floorX = Math.floor(xDiv)
-                    //                        if (xValue < COLUMNS && xValue >= 0) {
-                    //                            let i = (xValue + ((2 + c_row) * 8)) + (floorX * (LEDS_ON_PANEL - 8))
-                    //                            this.setPixelColor(i, rgb)
-                    //                        }
-                    //                    }
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-                    //    this.show()
-                    //    break
-                    //}
+                    /////////////////////////////////////////////////////////////////////////////////////////////////////
+                    //Setup for static text display TO DO 															   //
+                    //if (textLength <= COLUMNS) { 																	   //
+                    //    //Make text static display for set length of time 										   //
+                    //    for (let column = 0; column < COLUMNS; column++) { 										   //
+                    //        for (let stringLength = 0; stringLength < text.length; stringLength++) {	               //
+                    //            this.brightness = textBrightness 													   //
+                    //            let width = charWidth(text.charAt(stringLength)) 									   //
+                    //            let textData: Buffer = getChar(text.charAt(stringLength)) 						   //
+                    //            for (let c_row = 0; c_row < 5; c_row++) { 										   //
+                    //                for (let c_col = 0; c_col < 5; c_col++) { 									   //
+                    //                    if ((textData[c_row] & (1 << (4 - c_col))) > 0) { 						   //
+                    //                        let xValue = COLUMNS + c_col 											   //
+                    //                        let xDiv = xValue / 8 												   //
+                    //                        let floorX = Math.floor(xDiv) 										   //
+                    //                        if (xValue < COLUMNS && xValue >= 0) { 								   //
+                    //                            let i = (xValue + ((2 + c_row) * 8)) + (floorX * (LEDS_ON_PANEL - 8))//
+                    //                            this.setPixelColor(i, rgb) 										   //
+                    //                        } 																	   //
+                    //                    } 																		   //
+                    //                } 																			   //
+                    //            } 																				   //
+                    //        } 																					   //
+                    //    } 																						   //
+                    //    this.show() 																				   //
+                    //    break 																					   //
+                    //} 																							   //
+                    /////////////////////////////////////////////////////////////////////////////////////////////////////
                     for (let column = 0; column < textLength + COLUMNS; column++) {
                         this.clear()
                         if (style == TextStyle.Background) {
@@ -398,14 +417,28 @@ namespace Kitronik_Zip_Tile {
                         if (style == TextStyle.Underlined) {
                             let lineCol = COLUMNS - column - 1
                             let floorLineCol = Math.floor(lineCol / 8)
+                            let floorY = Math.floor((7 + centreOffsetV)/8)
                             let lineLED = 0
-                            switch (this._uBitLocation) {
-                        		case UBitLocations.Hidden:
-                            		lineLED = lineCol + (7 * 8) + (floorLineCol * (LEDS_ON_PANEL - 8))
-                            		break
-                        		case UBitLocations.Visible:
-                        			lineLED = (((COLUMNS/8)*LEDS_ON_PANEL)-1) - (lineCol + (7 * 8)) - (floorLineCol * (LEDS_ON_PANEL - 8))
-                        			break
+                            if (COLUMNS == 16 && ROWS == 16) {
+                            	switch (this._uBitLocation) {
+                            		case UBitLocations.Hidden:
+                            			//The first part of the equation is the equivalent of (x+8y) on the normal matrix starting 0, 0 in top left
+                                		lineLED = (-255 * (floorY - 1)) + (2 * floorY - 1) * ((lineCol + 8 * ((7 + centreOffsetV) - floorY * 8)) + floorLineCol * (LEDS_ON_PANEL - 8))
+                                		break
+                            		case UBitLocations.Visible:
+                            			lineLED = (-255 * (floorY - 1)) + (2 * floorY - 1) * ((lineCol + 8 * ((7 + centreOffsetV) - floorY * 8)) + floorLineCol * (LEDS_ON_PANEL - 8)) - 128 + (floorY * 256)
+                            			break
+                            	}
+                            }
+                            else {
+	                            switch (this._uBitLocation) {
+	                        		case UBitLocations.Hidden:
+	                            		lineLED = lineCol + (7 * 8) + (floorLineCol * (LEDS_ON_PANEL - 8))
+	                            		break
+	                        		case UBitLocations.Visible:
+	                        			lineLED = (((COLUMNS/8)*LEDS_ON_PANEL)-1) - (lineCol + (7 * 8)) - (floorLineCol * (LEDS_ON_PANEL - 8))
+	                        			break
+	                        	}
                         	}
                             this.setPixelColor(lineLED, formatRGB)
                             
