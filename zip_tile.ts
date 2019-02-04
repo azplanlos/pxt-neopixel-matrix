@@ -334,7 +334,7 @@ namespace Kitronik_Zip_Tile {
 	                                            this.setPixelColor(i, rgb)
 	                                        }
 							            }
-	                                    else if (ROWS < 8 && COLUMNS > 8) {
+	                                    else if (ROWS < 8) {
 	                                    	if (yValue < ROWS && yValue >= 0) {
 	                                    		let i = 0
 	                                        	switch (this._uBitLocation) {
