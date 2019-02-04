@@ -312,7 +312,7 @@ namespace Kitronik_Zip_Tile {
                                         let yDiv = yValue / 8
 							            let floorY = Math.floor(yDiv)
 							            let floorX = Math.floor((2 + c_col + centreOffsetH)/8)
-							            if (ROWS > 8 && COLUMNS < 8) {
+							            if (ROWS > 8 && COLUMNS <= 8) {
 							            	if (this._uBitLocation == UBitLocations.Hidden) {
 	                                            if (yValue < 8) {
 	                                                currentPanel = 2
@@ -334,7 +334,7 @@ namespace Kitronik_Zip_Tile {
 	                                            this.setPixelColor(i, rgb)
 	                                        }
 							            }
-	                                    else if (ROWS < 8) {
+	                                    else if (ROWS <= 8) {
 	                                    	if (yValue < ROWS && yValue >= 0) {
 	                                    		let i = 0
 	                                        	switch (this._uBitLocation) {
@@ -505,15 +505,15 @@ namespace Kitronik_Zip_Tile {
                                         if (xValue < COLUMNS && xValue >= 0) {
                                         	let i = 0
                                         	if (COLUMNS == 16 && ROWS == 16) {
-		                                        	switch (this._uBitLocation) {
-		                                        		case UBitLocations.Hidden:
-		                                        			//The first part of the equation is the equivalent of (x+8y) on the normal matrix starting 0, 0 in top left
-		                                            		i = (-255 * (floorY - 1)) + (2 * floorY - 1) * ((xValue + 8 * ((2 + c_row + centreOffsetV) - floorY * 8)) + floorX * (LEDS_ON_PANEL - 8))
-		                                            		break
-		                                        		case UBitLocations.Visible:
-		                                        			i = (-255 * (floorY - 1)) + (2 * floorY - 1) * ((xValue + 8 * ((2 + c_row + centreOffsetV) - floorY * 8)) + floorX * (LEDS_ON_PANEL - 8)) - 128 + (floorY * 256)
-		                                        			break
-		                                        	}
+	                                        	switch (this._uBitLocation) {
+	                                        		case UBitLocations.Hidden:
+	                                        			//The first part of the equation is the equivalent of (x+8y) on the normal matrix starting 0, 0 in top left
+	                                            		i = (-255 * (floorY - 1)) + (2 * floorY - 1) * ((xValue + 8 * ((2 + c_row + centreOffsetV) - floorY * 8)) + floorX * (LEDS_ON_PANEL - 8))
+	                                            		break
+	                                        		case UBitLocations.Visible:
+	                                        			i = (-255 * (floorY - 1)) + (2 * floorY - 1) * ((xValue + 8 * ((2 + c_row + centreOffsetV) - floorY * 8)) + floorX * (LEDS_ON_PANEL - 8)) - 128 + (floorY * 256)
+	                                        			break
+	                                        	}
 		                                    }
                                         	else {
                                         		switch (this._uBitLocation) {
