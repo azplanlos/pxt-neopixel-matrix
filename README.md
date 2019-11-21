@@ -9,32 +9,32 @@ The Tiles can be used individually or arranged into larger multi-tile displays, 
 Use the Tiles to display full colours, draw images with individual ZIP LEDs and to scroll text across the display. 
 
 ## Setup
-Depending on how many ZIP Tiles are being used and how they are connected, the 'tile' variable needs to be initialised in different ways.
-The first number in the function is the number of columns of ZIP LEDs on the Tiles the second is the number of rows of ZIP LEDs. 'UBitLocations' is explained below.
+Depending on how many ZIP Tiles are being used and how they are connected, the 'tileDisplay' variable needs to be initialised in different ways. This will make sure that any text displayed on the tile displays in the correct way. It is always assumed with these positions that the BBC micro:bit is the correct way up.
+The first number in the function is the number of ZIP Tiles connected horizontally, and the second is the number of ZIP Tiles connected vertically. 'UBitLocations' is explained below.
 
 Single Tile:
 ```blocks
-tile = Kitronik_Zip_Tile.createZIPTileDisplay(8, 8, Kitronik_Zip_Tile.UBitLocations.Standard)
+let tileDisplay = Kitronik_Zip_Tile.createZIPTileDisplay(1, 1, Kitronik_Zip_Tile.UBitLocations.Hidden)
 ```
-The BBC micro:bit location is 'Standard' as it is attached to the 1 ZIP Tile.
+The BBC micro:bit location is 'Hidden' as it is attached to the rear of the ZIP Tile.
+
+Single Tile:
+```blocks
+let tileDisplay = Kitronik_Zip_Tile.createZIPTileDisplay(1, 1, Kitronik_Zip_Tile.UBitLocations.Visible)
+```
+The BBC micro:bit location is 'Visible' as it is attached to the front of the ZIP Tile.
 
 2 Tiles in a single row (connected side-by-side):
 ```blocks
-tile = Kitronik_Zip_Tile.createZIPTileDisplay(16, 8, Kitronik_Zip_Tile.UBitLocations.Standard)
+let tileDisplay = Kitronik_Zip_Tile.createZIPTileDisplay(2, 1, Kitronik_Zip_Tile.UBitLocations.Hidden)
 ```
-The BBC micro:bit location is 'Standard' as it is attached to the first ZIP Tile in the display.
+The BBC micro:bit location is 'Hidden' as it is attached to the rear of the first ZIP Tile.
 
 2 Tiles in a single column (connected top-to-top):
 ```blocks
-tile = Kitronik_Zip_Tile.createZIPTileDisplay(8, 16, Kitronik_Zip_Tile.UBitLocations.Top)
+let tileDisplay = Kitronik_Zip_Tile.createZIPTileDisplay(1, 2, Kitronik_Zip_Tile.UBitLocations.Visible)
 ```
-The BBC micro:bit location is 'Top' as it is attached to the upper ZIP Tile.
-
-2 Tiles in a single column (connected top-to-top):
-```blocks
-tile = Kitronik_Zip_Tile.createZIPTileDisplay(8, 16, Kitronik_Zip_Tile.UBitLocations.Bottom)
-```
-The BBC micro:bit location is 'Bottom' as it is attached to the lower ZIP Tile.
+The BBC micro:bit location is 'Visible' as it is attached to the front of the top ZIP Tile.
 
 (Note: There are diagrams in the product datasheet explaining BBC micro:bit location more clearly)
 
