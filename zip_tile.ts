@@ -38,18 +38,6 @@ namespace Kitronik_Zip_Tile {
     	Up
     }
 
-	/**
-	 * Different modes for RGB or RGB+W ZIP strips
-	 */
-	export enum ZipLedMode {
-	    //% block="RGB (GRB format)"
-	    RGB = 0,
-	    //% block="RGB+W"
-	    RGBW = 1,
-	    //% block="RGB (RGB format)"
-	    RGB_RGB = 2
-	}
-
     /**
      * Different configurations for micro:bit location in a multi-tile display
      * Use standard for a single tile
@@ -79,7 +67,6 @@ namespace Kitronik_Zip_Tile {
     	brightness: number;
     	start: number;
     	_length: number;
-    	_mode: ZipLedMode;
     	_matrixWidth: number;
         _matrixHeight: number;
         _uBitLocation: UBitLocations;
@@ -156,8 +143,7 @@ namespace Kitronik_Zip_Tile {
         //% blockId="kitronik_zip_tile_display_rotate" block="%tileDisplay|rotate ZIP LEDs by %offset" blockGap=8
         //% weight=93
         rotate(offset: number = 1): void {
-            const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
-            this.buf.rotate(-offset * stride, this.start * stride, this._length * stride)
+            this.buf.rotate(-offset * 3, this.start * 3, this._length * 3)
         }
 
     	/**
@@ -562,7 +548,7 @@ namespace Kitronik_Zip_Tile {
         //% blockId="kitronik_zip_tile_display_show" block="%tileDisplay|show" blockGap=8
         //% weight=96
         show() {
-            ws2812b.sendBuffer(this.buf, this.pin);
+            ws2812b.sendBuffer(this.buf, this.pin, this.brightness);
         }
 
         /**
@@ -571,10 +557,8 @@ namespace Kitronik_Zip_Tile {
          */
         //% blockId="kitronik_zip_tile_display_clear" block="%tileDisplay|clear"
         //% weight=95
-        
         clear(): void {
-            const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
-            this.buf.fill(0, this.start * stride, this._length * stride);
+            this.buf.fill(0, this.start * 3, this._length * 3);
         }
 
         /**
@@ -583,9 +567,18 @@ namespace Kitronik_Zip_Tile {
          */
         //% blockId="kitronik_zip_tile_display_set_brightness" block="%tileDisplay|set brightness %brightness" blockGap=8
         //% weight=92
-        
         setBrightness(brightness: number): void {
+            //Clamp incoming variable at 0-255 Math.clamp didnt work...
+            if(brightness <0)
+            {
+              brightness = 0
+            }
+            else if (brightness > 255)
+            {
+              brightness = 255
+            }
             this.brightness = brightness & 0xff;
+            basic.pause(1) //add a pause to stop weirdnesses
         }
 
         /**
@@ -604,13 +597,8 @@ namespace Kitronik_Zip_Tile {
         }
 
         private setBufferRGB(offset: number, red: number, green: number, blue: number): void {
-            if (this._mode === ZipLedMode.RGB_RGB) {
-                this.buf[offset + 0] = red;
-                this.buf[offset + 1] = green;
-            } else {
-                this.buf[offset + 0] = green;
-                this.buf[offset + 1] = red;
-            }
+            this.buf[offset + 0] = green;
+            this.buf[offset + 1] = red;
             this.buf[offset + 2] = blue;
         }
 
@@ -619,31 +607,9 @@ namespace Kitronik_Zip_Tile {
             let green = unpackG(rgb);
             let blue = unpackB(rgb);
 
-            const br = this.brightness;
-            if (br < 255) {
-                red = (red * br) >> 8;
-                green = (green * br) >> 8;
-                blue = (blue * br) >> 8;
-            }
             const end = this.start + this._length;
-            const stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
             for (let i = this.start; i < end; ++i) {
-                this.setBufferRGB(i * stride, red, green, blue)
-            }
-        }
-        private setAllW(white: number) {
-            if (this._mode !== ZipLedMode.RGBW)
-                return;
-
-            let br = this.brightness;
-            if (br < 255) {
-                white = (white * br) >> 8;
-            }
-            let buf = this.buf;
-            let end = this.start + this._length;
-            for (let i = this.start; i < end; ++i) {
-                let ledoffset = i * 4;
-                buf[ledoffset + 3] = white;
+                this.setBufferRGB(i * 3, red, green, blue)
             }
         }
         private setPixelRGB(pixeloffset: number, rgb: number): void {
@@ -651,37 +617,13 @@ namespace Kitronik_Zip_Tile {
                 || pixeloffset >= this._length)
                 return;
 
-            let stride = this._mode === ZipLedMode.RGBW ? 4 : 3;
-            pixeloffset = (pixeloffset + this.start) * stride;
+            pixeloffset = (pixeloffset + this.start) * 3;
 
             let red = unpackR(rgb);
             let green = unpackG(rgb);
             let blue = unpackB(rgb);
 
-            let br = this.brightness;
-            if (br < 255) {
-                red = (red * br) >> 8;
-                green = (green * br) >> 8;
-                blue = (blue * br) >> 8;
-            }
             this.setBufferRGB(pixeloffset, red, green, blue)
-        }
-        private setPixelW(pixeloffset: number, white: number): void {
-            if (this._mode !== ZipLedMode.RGBW)
-                return;
-
-            if (pixeloffset < 0
-                || pixeloffset >= this._length)
-                return;
-
-            pixeloffset = (pixeloffset + this.start) * 4;
-
-            let br = this.brightness;
-            if (br < 255) {
-                white = (white * br) >> 8;
-            }
-            let buf = this.buf;
-            buf[pixeloffset + 3] = white;
         }
     }
 
@@ -697,11 +639,9 @@ namespace Kitronik_Zip_Tile {
     //% blockSetVariable=tileDisplay
     export function createZIPTileDisplay(hArrange: number, vArrange: number, uBitConfig: UBitLocations): ZIPTileDisplay {
         let tileDisplay = new ZIPTileDisplay();
-        let stride = 0 === ZipLedMode.RGBW ? 4 : 3;
-        tileDisplay.buf = pins.createBuffer((hArrange * vArrange * 64) * stride);
+        tileDisplay.buf = pins.createBuffer((hArrange * vArrange * 64) * 3);
         tileDisplay.start = 0;
         tileDisplay._length = (hArrange * vArrange * 64);
-        tileDisplay._mode = 0;
         tileDisplay._matrixWidth = (hArrange*8);
         tileDisplay._matrixHeight = (vArrange*8);
         tileDisplay._uBitLocation = uBitConfig;
