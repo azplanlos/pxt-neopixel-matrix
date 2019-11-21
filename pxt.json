@@ -1,11 +1,11 @@
 {
     "name": "pxt-kitronik-zip-tile",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "Blocks for driving the Kitronik ZIP Tile",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-        "ws2812b": "github:Microsoft/pxt-ws2812b#v0.0.4"
+        "ws2812b": "github:KitronikLtd/pxt-ws2812b#v0.0.5"
     },
     "files": [
         "README.md",
