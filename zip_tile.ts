@@ -548,7 +548,9 @@ namespace Kitronik_Zip_Tile {
         //% blockId="kitronik_zip_tile_display_show" block="%tileDisplay|show" blockGap=8
         //% weight=96
         show() {
-            ws2812b.sendBuffer(this.buf, this.pin, this.brightness);
+            //ws2812b.sendBuffer(this.buf, this.pin, this.brightness);
+            // Use the pxt-microbit core version which now respects brightness (10/2020)
+            light.sendWS2812BufferWithBrightness(this.buf, this.pin, this.brightness);
         }
 
         /**
