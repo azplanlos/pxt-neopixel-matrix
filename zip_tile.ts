@@ -234,9 +234,9 @@ namespace Kitronik_Zip_Tile {
          * @param rgb RGB color of the text
          * @param formatRGB RGB color of the text
          */
-        //% blockId="kitronik_zip_tile_static_character" block="%tileDisplay|static %text|formatting %style|format colour %formatRGB=zip_colors|text colour %rgb=zip_colors" 
+        //% blockId="kitronik_zip_tile_static_character" block="%tileDisplay|static %text|text colour %rgb=zip_colors" 
         //% weight=97
-        staticCharacter(text: string, style: TextStyle, formatRGB: number, rgb: number) {
+        staticCharacter(text: string, rgb: number) {
 
             let COLUMNS = this._matrixWidth
             let ROWS = this._matrixHeight
@@ -255,23 +255,6 @@ namespace Kitronik_Zip_Tile {
                 }
             }
 
-            // for (let column = 0; column < COLUMNS; column++) {
-            //     this.brightness = textBrightness
-            //     let textData: Buffer = getChar(text.charAt(0))
-            //     for (let c_row = 0; c_row < 5; c_row++) {
-            //         for (let c_col = 0; c_col < 5; c_col++) {
-            //             if ((textData[c_row] & (1 << (4 - c_col))) > 0) {
-            //                 let xValue = COLUMNS + c_col
-            //                 let xDiv = xValue / 8
-            //                 let floorX = Math.floor(xDiv)
-            //                 if (xValue < COLUMNS && xValue >= 0) {
-            //                     let i = (xValue + ((2 + c_row) * 8)) + (floorX * (LEDS_ON_PANEL - 8))
-            //                     this.setPixelColor(i, rgb)
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
             this.show()
         }
 
