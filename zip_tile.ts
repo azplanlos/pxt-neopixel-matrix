@@ -306,10 +306,10 @@ namespace Kitronik_Zip_Tile {
                                 switch (this._uBitLocation) {
                                     case UBitLocations.Hidden:
                                         //The first part of the equation is the equivalent of (x+8y) on the normal matrix starting 0, 0 in top left
-                                        i = (-255 * (floorY - 1)) + (2 * floorY - 1) * (((2 + c_col + centreOffsetH) + 8 * (c_row - floorY * 8)) + floorX * (LEDS_ON_PANEL - 8))
+                                        i = (-255 * (floorY - 1)) + (2 * floorY + centreOffsetV - 1) * (((2 + c_col + centreOffsetH) + 8 * (c_row - floorY * 8)) + floorX * (LEDS_ON_PANEL - 8))
                                         break
                                     case UBitLocations.Visible:
-                                        i = (-255 * (floorY - 1)) + (2 * floorY - 1) * (((2 + c_col + centreOffsetH) + 8 * (c_row - floorY * 8)) + floorX * (LEDS_ON_PANEL - 8)) - 128 + (floorY * 256)
+                                        i = (-255 * (floorY - 1)) + (2 * floorY + centreOffsetV - 1) * (((2 + c_col + centreOffsetH) + 8 * (c_row - floorY * 8)) + floorX * (LEDS_ON_PANEL - 8)) - 128 + (floorY * 256)
                                         break
                                 }
                                 this.setPixelColor(i, rgb)
