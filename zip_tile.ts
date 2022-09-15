@@ -228,6 +228,37 @@ namespace Kitronik_Zip_Tile {
         }
 
         /**
+         * Static character on tile (select colour and style)
+         * @param text is the character to display
+         * @param style extra formatting of the text (such as underlined)
+         * @param rgb RGB color of the text
+         * @param formatRGB RGB color of the text
+         */
+        //% blockId="kitronik_zip_tile_static_character" block="%tileDisplay|static %text|text colour %rgb=zip_colors" 
+        //% weight=97
+        staticCharacter(text: string, rgb: number) {
+
+            let COLUMNS = this._matrixWidth
+            let ROWS = this._matrixHeight
+            let xOffset = (COLUMNS / 2) - 2
+            let yOffset = (ROWS / 2) - 2
+
+            let textData: Buffer = getChar(text.charAt(0))
+
+            for (let c_row = 0; c_row < 5; c_row++) {
+                for (let c_col = 0; c_col < 5; c_col++) {
+                    if ((textData[c_row] & (1 << (4 - c_col))) > 0) {
+
+                        let i = c_col + c_row * COLUMNS + xOffset + yOffset * COLUMNS
+                        this.setPixelColor(i, rgb)
+                    }
+                }
+            }
+
+            this.show()
+        }
+
+        /**
          * Scroll text across tile (select direction, speed & colour)
          * @param text is the text to scroll
          * @param direction the text will travel
@@ -266,13 +297,6 @@ namespace Kitronik_Zip_Tile {
                     for (textChar = 0; textChar < text.length; textChar++) {
                         textHeight += 6
                     }
-                    /////////////////////////////////////////////////////////
-                    //Setup for static text display TO DO                  //
-                    //if (textHeight <= ROWS) {                            //
-                    //    //Make text static display for set length of time//
-                    //    break                                            //
-                    //}                                                    //
-                    /////////////////////////////////////////////////////////
                     for (let row = 0; row < textHeight + ROWS; row ++) {
                         this.clear()
                         if (style == TextStyle.Background) {
@@ -366,34 +390,6 @@ namespace Kitronik_Zip_Tile {
                     for (textChar = 0; textChar < text.length; textChar++) {
                         textLength += charWidth(text.charAt(textChar)) + 1
                     }
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////
-                    //Setup for static text display TO DO                                                              //
-                    //if (textLength <= COLUMNS) {                                                                     //
-                    //    //Make text static display for set length of time                                            //
-                    //    for (let column = 0; column < COLUMNS; column++) {                                           //
-                    //        for (let stringLength = 0; stringLength < text.length; stringLength++) {                 //
-                    //            this.brightness = textBrightness                                                     //
-                    //            let width = charWidth(text.charAt(stringLength))                                     //
-                    //            let textData: Buffer = getChar(text.charAt(stringLength))                            //
-                    //            for (let c_row = 0; c_row < 5; c_row++) {                                            //
-                    //                for (let c_col = 0; c_col < 5; c_col++) {                                        //
-                    //                    if ((textData[c_row] & (1 << (4 - c_col))) > 0) {                            //
-                    //                        let xValue = COLUMNS + c_col                                             //
-                    //                        let xDiv = xValue / 8                                                    //
-                    //                        let floorX = Math.floor(xDiv)                                            //
-                    //                        if (xValue < COLUMNS && xValue >= 0) {                                   //
-                    //                            let i = (xValue + ((2 + c_row) * 8)) + (floorX * (LEDS_ON_PANEL - 8))//
-                    //                            this.setPixelColor(i, rgb)                                           //
-                    //                        }                                                                        //
-                    //                    }                                                                            //
-                    //                }                                                                                //
-                    //            }                                                                                    //
-                    //        }                                                                                        //
-                    //    }                                                                                            //
-                    //    this.show()                                                                                  //
-                    //    break                                                                                        //
-                    //}                                                                                                //
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////
                     for (let column = 0; column < textLength + COLUMNS; column++) {
                         this.clear()
                         if (style == TextStyle.Background) {
