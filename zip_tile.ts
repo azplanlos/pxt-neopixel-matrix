@@ -254,16 +254,14 @@ namespace Kitronik_Zip_Tile {
                 centreOffsetV = (ROWS/2) - 4
             }
 
-            this.setPixelColor(0, rgb)
             let textData: Buffer = getChar(text.charAt(0))
 
             for (let c_row = 0; c_row < 5; c_row++) {
                 for (let c_col = 0; c_col < 5; c_col++) {
                     if ((textData[c_row] & (1 << (4 - c_col))) > 0) {
 
-                        let yDiv = c_row / 8
-                        let floorY = Math.floor(yDiv)
-                        let floorX = Math.floor((2 + c_col + centreOffsetH)/8)
+                        let floorY = Math.floor((2 + c_row + centreOffsetV) / 8)
+                        let floorX = Math.floor((2 + c_col + centreOffsetH) / 8)
 
                         if (ROWS > 8 && COLUMNS <= 8) {
                             if (this._uBitLocation == UBitLocations.Hidden) {
