@@ -228,6 +228,58 @@ namespace Kitronik_Zip_Tile {
         }
 
         /**
+         * Static character on tile (select colour and style)
+         * @param text is the character to display
+         * @param style extra formatting of the text (such as underlined)
+         * @param rgb RGB color of the text
+         * @param formatRGB RGB color of the text
+         */
+        //% blockId="kitronik_zip_tile_static_character" block="%tileDisplay|static %text|formatting %style|format colour %formatRGB=zip_colors|text colour %rgb=zip_colors" 
+        //% weight=97
+        staticCharacter(text: string, style: TextStyle, formatRGB: number, rgb: number) {
+
+            let LEDS_ON_PANEL = 64
+            let COLUMNS = this._matrixWidth
+            let ROWS = this._matrixHeight
+            let totalPanels = (this._length/LEDS_ON_PANEL)
+            let textBrightness = this.brightness
+            let backBrightness = textBrightness/6
+            let lineColOffset = 0
+            let centreOffsetH = 0 //Horizontal centre offset
+            let centreOffsetV = 0 //Vertical centre offset
+            let currentPanel = 0
+            let textLength = 0 //This is really the width in individual pixels, calculated in next step if direction = LEFT
+            let textChar = 0
+
+            if (COLUMNS > 8) {
+                centreOffsetH = (COLUMNS/2) - 4
+            }
+
+            if (ROWS > 8) {
+                centreOffsetV = (ROWS/2) - 4
+            }
+
+            for (let column = 0; column < COLUMNS; column++) {
+                this.brightness = textBrightness
+                let textData: Buffer = getChar(text.charAt(0))
+                for (let c_row = 0; c_row < 5; c_row++) {
+                    for (let c_col = 0; c_col < 5; c_col++) {
+                        if ((textData[c_row] & (1 << (4 - c_col))) > 0) {
+                            let xValue = COLUMNS + c_col
+                            let xDiv = xValue / 8
+                            let floorX = Math.floor(xDiv)
+                            if (xValue < COLUMNS && xValue >= 0) {
+                                let i = (xValue + ((2 + c_row) * 8)) + (floorX * (LEDS_ON_PANEL - 8))
+                                this.setPixelColor(i, rgb)
+                            }
+                        }
+                    }
+                }
+            }
+            this.show()
+        }
+
+        /**
          * Scroll text across tile (select direction, speed & colour)
          * @param text is the text to scroll
          * @param direction the text will travel
@@ -266,13 +318,6 @@ namespace Kitronik_Zip_Tile {
                     for (textChar = 0; textChar < text.length; textChar++) {
                         textHeight += 6
                     }
-                    /////////////////////////////////////////////////////////
-                    //Setup for static text display TO DO                  //
-                    //if (textHeight <= ROWS) {                            //
-                    //    //Make text static display for set length of time//
-                    //    break                                            //
-                    //}                                                    //
-                    /////////////////////////////////////////////////////////
                     for (let row = 0; row < textHeight + ROWS; row ++) {
                         this.clear()
                         if (style == TextStyle.Background) {
@@ -366,34 +411,6 @@ namespace Kitronik_Zip_Tile {
                     for (textChar = 0; textChar < text.length; textChar++) {
                         textLength += charWidth(text.charAt(textChar)) + 1
                     }
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////
-                    //Setup for static text display TO DO                                                              //
-                    //if (textLength <= COLUMNS) {                                                                     //
-                    //    //Make text static display for set length of time                                            //
-                    //    for (let column = 0; column < COLUMNS; column++) {                                           //
-                    //        for (let stringLength = 0; stringLength < text.length; stringLength++) {                 //
-                    //            this.brightness = textBrightness                                                     //
-                    //            let width = charWidth(text.charAt(stringLength))                                     //
-                    //            let textData: Buffer = getChar(text.charAt(stringLength))                            //
-                    //            for (let c_row = 0; c_row < 5; c_row++) {                                            //
-                    //                for (let c_col = 0; c_col < 5; c_col++) {                                        //
-                    //                    if ((textData[c_row] & (1 << (4 - c_col))) > 0) {                            //
-                    //                        let xValue = COLUMNS + c_col                                             //
-                    //                        let xDiv = xValue / 8                                                    //
-                    //                        let floorX = Math.floor(xDiv)                                            //
-                    //                        if (xValue < COLUMNS && xValue >= 0) {                                   //
-                    //                            let i = (xValue + ((2 + c_row) * 8)) + (floorX * (LEDS_ON_PANEL - 8))//
-                    //                            this.setPixelColor(i, rgb)                                           //
-                    //                        }                                                                        //
-                    //                    }                                                                            //
-                    //                }                                                                                //
-                    //            }                                                                                    //
-                    //        }                                                                                        //
-                    //    }                                                                                            //
-                    //    this.show()                                                                                  //
-                    //    break                                                                                        //
-                    //}                                                                                                //
-                    /////////////////////////////////////////////////////////////////////////////////////////////////////
                     for (let column = 0; column < textLength + COLUMNS; column++) {
                         this.clear()
                         if (style == TextStyle.Background) {
