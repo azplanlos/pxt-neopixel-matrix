@@ -250,6 +250,10 @@ namespace Kitronik_Zip_Tile {
                     if ((textData[c_row] & (1 << (4 - c_col))) > 0) {
 
                         let i = c_col + c_row * COLUMNS + xOffset + yOffset * COLUMNS
+
+                        if (this._uBitLocation == UBitLocations.Visible)
+                            i = COLUMNS * ROWS - i
+                        
                         this.setPixelColor(i, rgb)
                     }
                 }
