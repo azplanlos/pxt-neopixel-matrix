@@ -1,7 +1,7 @@
 {
-    "name": "pxt-kitronik-zip-tile",
-    "version": "0.1.0",
-    "description": "Blocks for driving the Kitronik ZIP Tile",
+    "name": "pxt-neopixel-matrix",
+    "version": "0.1.1",
+    "description": "Blocks for neopixel matrix forked from kitronik",
     "license": "MIT",
     "dependencies": {
         "core": "*"
